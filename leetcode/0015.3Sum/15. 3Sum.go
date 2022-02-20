@@ -4,6 +4,40 @@ import (
 	"sort"
 )
 
+func myThreeSum(nums []int) [][]int {
+	sort.Ints(nums)
+	results := make([][]int, 0)
+	for index := 1; index < len(nums)-1; index++ {
+		left, right := 0, len(nums)-1
+		// 去重
+		if index > 1 && nums[index] == nums[index-1] {
+			left = index - 1
+		}
+		for left < index && right > index {
+			// 去重
+			if left > 0 && nums[left] == nums[left-1] {
+				left++
+				continue
+			}
+			if right < len(nums)-1 && nums[right] == nums[right+1] {
+				right--
+				continue
+			}
+			sum := nums[left] + nums[index] + nums[right]
+			if sum == 0 {
+				results = append(results, []int{nums[left], nums[index], nums[right]})
+				left++
+				right--
+			} else if sum > 0 {
+				right--
+			} else {
+				left++
+			}
+		}
+	}
+	return results
+}
+
 // 解法一 最优解，双指针 + 排序
 func threeSum(nums []int) [][]int {
 	sort.Ints(nums)
@@ -44,13 +78,13 @@ func threeSum1(nums []int) [][]int {
 	for _, value := range nums {
 		counter[value]++
 	}
-
+	
 	uniqNums := []int{}
 	for key := range counter {
 		uniqNums = append(uniqNums, key)
 	}
 	sort.Ints(uniqNums)
-
+	
 	for i := 0; i < len(uniqNums); i++ {
 		if (uniqNums[i]*3 == 0) && counter[uniqNums[i]] >= 3 {
 			res = append(res, []int{uniqNums[i], uniqNums[i], uniqNums[i]})

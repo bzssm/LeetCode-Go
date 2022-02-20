@@ -1,6 +1,33 @@
 package leetcode
 
 // 解法一 位图
+func myLengthOfLongestSubstring(s string) int {
+	if len(s) == 0 {
+		return 0
+	}
+	var bs [256]bool
+	result, left, right := 0, 0, 0
+	for left < len(s) {
+		if bs[s[right]] {
+			// 这里说明右边的字符已经存在了
+			bs[s[left]] = false
+			left++
+		} else {
+			// 右边字符不存在
+			bs[s[right]] = true
+			right++
+		}
+		// 操作完成之后比较
+		if result < right-left {
+			result = right - left
+		}
+		if right >= len(s) {
+			break
+		}
+	}
+	return result
+}
+
 func lengthOfLongestSubstring(s string) int {
 	if len(s) == 0 {
 		return 0
@@ -33,12 +60,12 @@ func lengthOfLongestSubstring1(s string) int {
 	}
 	var freq [127]int
 	result, left, right := 0, 0, -1
-
+	
 	for left < len(s) {
 		if right+1 < len(s) && freq[s[right+1]] == 0 {
 			freq[s[right+1]]++
 			right++
-
+			
 		} else {
 			freq[s[left]]--
 			left++

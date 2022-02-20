@@ -2,20 +2,41 @@ package leetcode
 
 var (
 	letterMap = []string{
-		" ",    //0
-		"",     //1
-		"abc",  //2
-		"def",  //3
-		"ghi",  //4
-		"jkl",  //5
-		"mno",  //6
-		"pqrs", //7
-		"tuv",  //8
-		"wxyz", //9
+		" ",    // 0
+		"",     // 1
+		"abc",  // 2
+		"def",  // 3
+		"ghi",  // 4
+		"jkl",  // 5
+		"mno",  // 6
+		"pqrs", // 7
+		"tuv",  // 8
+		"wxyz", // 9
 	}
 	res   = []string{}
 	final = 0
 )
+
+func myLetterCombinations(digits string) []string {
+	if digits == "" {
+		return []string{}
+	}
+	res = []string{}
+	myFind(digits, 0, "")
+	return res
+}
+
+func myFind(digits string, index int, s string) {
+	if index == len(digits) {
+		res = append(res, s)
+		return
+	}
+	letter := letterMap[digits[index]-'0']
+	for i := 0; i < len(letter); i++ {
+		myFind(digits, index+1, s+string(letter[i]))
+	}
+	return
+}
 
 // 解法一 DFS
 func letterCombinations(digits string) []string {

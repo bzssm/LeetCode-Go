@@ -1,5 +1,41 @@
 package leetcode
 
+func myLongestPalindrome(s string) string {
+	if len(s) <= 1 {
+		return s
+	}
+	ns := make([]rune, 0)
+	ns = append(ns, '#')
+	for _, c := range s {
+		ns = append(ns, c, '#')
+	}
+	p, maxRight, center, maxLen, begin := make([]int, len(ns)), 0, 0, 1, 0
+	for index := 0; index < len(ns); index++ {
+		// 先保守复制，然后中心扩散
+		if index < maxRight {
+			p[index] = min(maxRight-index, p[2*center-index])
+		}
+		// 中心扩散
+		left, right := index-(p[index]+1), index+(p[index]+1)
+		for left >= 0 && right < len(ns) && ns[left] == ns[right] {
+			p[index]++
+			left--
+			right++
+		}
+		// 更新maxRight
+		if index+p[index] > maxRight {
+			maxRight = index + p[index]
+			center = index
+		}
+		// 更新最长值
+		if p[index] > maxLen {
+			maxLen = p[index]
+			begin = (index - maxLen) / 2 // 有辅助字符
+		}
+	}
+	return s[begin : begin+maxLen]
+}
+
 // 解法一 Manacher's algorithm，时间复杂度 O(n)，空间复杂度 O(n)
 func longestPalindrome(s string) string {
 	if len(s) < 2 {

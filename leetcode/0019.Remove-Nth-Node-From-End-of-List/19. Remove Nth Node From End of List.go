@@ -15,6 +15,21 @@ type ListNode = structures.ListNode
  * }
  */
 
+func myRemoveNthFromEnd(head *ListNode, n int) *ListNode {
+	dummyHead := &ListNode{Next: head}
+	preSlow, slow, fast := dummyHead, head, head
+	for fast != nil {
+		if n <= 0 {
+			preSlow = slow
+			slow = slow.Next
+		}
+		fast = fast.Next
+		n--
+	}
+	preSlow.Next = slow.Next
+	return dummyHead.Next
+}
+
 // 解法一
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	dummyHead := &ListNode{Next: head}
